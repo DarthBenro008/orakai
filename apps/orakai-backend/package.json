@@ -7,6 +7,8 @@
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest",
+		"migrate:local": "wrangler d1 execute orakai-db --local --file ./schema.sql",
+		"migrate:remote": "wrangler d1 execute orakai-db --remote --file ./schema.sql",
 		"cf-typegen": "wrangler types"
 	},
 	"devDependencies": {

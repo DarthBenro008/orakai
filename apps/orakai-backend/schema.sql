@@ -62,5 +62,6 @@ CREATE TABLE
         "outputType" text NOT NULL,
         "lastFetched" datetime NOT NULL DEFAULT NULL,
         "createdAt" datetime NOT NULL DEFAULT NULL,
-        PRIMARY KEY (id) REFERENCES "users" ("id")
+        PRIMARY KEY (id),
+        FOREIGN KEY ("userId") REFERENCES "users" ("id")
     );
