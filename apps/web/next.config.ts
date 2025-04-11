@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
 };
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev({
-  persist: {
-    path: "../orakai-backend/.wrangler/state/v3",
-  },
-});
+initOpenNextCloudflareForDev();
 
 export default nextConfig;

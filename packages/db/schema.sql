@@ -54,14 +54,12 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS "queries" (
-        "id" integer AUTO_INCREMENT NOT NULL,
-        "userId" text NOT NULL DEFAULT NULL,
+        "id" integer PRIMARY KEY AUTOINCREMENT,
+        "userId" text NOT NULL,
         "queryName" text NOT NULL,
         "queryDescription" text NOT NULL,
         "queryPrompt" text NOT NULL,
         "outputType" text NOT NULL,
-        "lastFetched" datetime NOT NULL DEFAULT NULL,
         "createdAt" datetime NOT NULL DEFAULT NULL,
-        PRIMARY KEY (id),
         FOREIGN KEY ("userId") REFERENCES "users" ("id")
     );

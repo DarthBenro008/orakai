@@ -12,6 +12,12 @@ const authResult = async (): Promise<NextAuthResult> => {
     session: {
       strategy: "jwt",
     },
+    callbacks: {
+      async session({ session, token }) {
+        session.user.id = token.sub
+        return session
+      },
+    },
   })
 }
 
