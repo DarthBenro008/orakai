@@ -1,0 +1,19 @@
+{
+    "main": ".open-next/worker.js",
+    "name": "orakai-web",
+    "compatibility_date": "2025-03-25",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS"
+    },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "orakai-db",
+            "database_id": "666f03e8-d442-4a48-b5a1-88785e6e49bd"
+        }
+    ]
+}
