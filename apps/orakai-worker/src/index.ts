@@ -41,12 +41,7 @@ async function initializeStorageClient() {
 }
 
 // Load contract ABI and create contract instance
-const oracleABI = [
-  "function requestQuery(string queryID, string requestID, address callbackAddress) external",
-  "function submitResponse(string requestID, string cid) external",
-  "function getRequest(string requestID) external view returns (address, string, string, address, uint256, bool)",
-  "event QueryRequested(string indexed queryID, string indexed requestID, address indexed sender)"
-];
+const oracleABI = [{"type":"constructor","inputs":[{"name":"_aggregator","type":"address","internalType":"address"}],"stateMutability":"nonpayable"},{"type":"function","name":"aggregator","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"finaliseResponse","inputs":[{"name":"requestID","type":"string","internalType":"string"},{"name":"validIndexes","type":"uint256[]","internalType":"uint256[]"},{"name":"randSeed","type":"uint256","internalType":"uint256"},{"name":"finalAnswer","type":"bytes","internalType":"bytes"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"getRequest","inputs":[{"name":"requestID","type":"string","internalType":"string"}],"outputs":[{"name":"","type":"tuple","internalType":"struct OrakaiOracle.Request","components":[{"name":"requester","type":"address","internalType":"address"},{"name":"queryID","type":"string","internalType":"string"},{"name":"requestID","type":"string","internalType":"string"},{"name":"callbackAddress","type":"address","internalType":"address"},{"name":"timestamp","type":"uint256","internalType":"uint256"},{"name":"finalized","type":"bool","internalType":"bool"}]}],"stateMutability":"view"},{"type":"function","name":"getResponses","inputs":[{"name":"requestID","type":"string","internalType":"string"}],"outputs":[{"name":"","type":"tuple[]","internalType":"struct OrakaiOracle.Response[]","components":[{"name":"worker","type":"address","internalType":"address"},{"name":"cid","type":"string","internalType":"string"}]}],"stateMutability":"view"},{"type":"function","name":"hasResponded","inputs":[{"name":"","type":"bytes32","internalType":"bytes32"},{"name":"","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"requestQuery","inputs":[{"name":"queryID","type":"string","internalType":"string"},{"name":"requestID","type":"string","internalType":"string"},{"name":"callbackAddress","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"requestTimeout","inputs":[],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"requests","inputs":[{"name":"","type":"bytes32","internalType":"bytes32"}],"outputs":[{"name":"requester","type":"address","internalType":"address"},{"name":"queryID","type":"string","internalType":"string"},{"name":"requestID","type":"string","internalType":"string"},{"name":"callbackAddress","type":"address","internalType":"address"},{"name":"timestamp","type":"uint256","internalType":"uint256"},{"name":"finalized","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"responses","inputs":[{"name":"","type":"bytes32","internalType":"bytes32"},{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"worker","type":"address","internalType":"address"},{"name":"cid","type":"string","internalType":"string"}],"stateMutability":"view"},{"type":"function","name":"submitResponse","inputs":[{"name":"requestID","type":"string","internalType":"string"},{"name":"cid","type":"string","internalType":"string"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"updateAggregator","inputs":[{"name":"newAggregator","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"event","name":"Finalised","inputs":[{"name":"reqHash","type":"bytes32","indexed":true,"internalType":"bytes32"},{"name":"queryID","type":"string","indexed":false,"internalType":"string"},{"name":"winner","type":"address","indexed":false,"internalType":"address"},{"name":"answer","type":"bytes","indexed":false,"internalType":"bytes"}],"anonymous":false},{"type":"event","name":"RequestCreated","inputs":[{"name":"reqHash","type":"bytes32","indexed":true,"internalType":"bytes32"},{"name":"requester","type":"address","indexed":false,"internalType":"address"},{"name":"queryID","type":"string","indexed":false,"internalType":"string"},{"name":"requestID","type":"string","indexed":false,"internalType":"string"}],"anonymous":false},{"type":"event","name":"ResponseSubmitted","inputs":[{"name":"reqHash","type":"bytes32","indexed":true,"internalType":"bytes32"},{"name":"worker","type":"address","indexed":false,"internalType":"address"},{"name":"cid","type":"string","indexed":false,"internalType":"string"},{"name":"requestID","type":"string","indexed":false,"internalType":"string"}],"anonymous":false}]
 
 const oracleContract = new ethers.Contract(ORACLE_CONTRACT_ADDRESS!, oracleABI, wallet);
 
@@ -100,9 +95,9 @@ async function fetchQueryDetails(queryID: string) {
 async function processRequest(requestID: string) {
   try {
     // Get request details from contract
-    const [requester, queryID, _, callbackAddress, timestamp, finalized] = 
+    const [requester, queryID, _, callbackAddress, timestamp, finalized] =
       await oracleContract.getRequest(requestID);
-    
+
     if (finalized) {
       console.log(`Request ${requestID} already finalized`);
       return;
@@ -128,12 +123,12 @@ async function processRequest(requestID: string) {
     });
 
     const rawResponse = completion.choices[0].message.content?.trim() || '';
-    
+
     // Validate and format the response
     if (!validateOutputType(rawResponse, outputType)) {
       throw new Error(`Response "${rawResponse}" is not a valid ${outputType}`);
     }
-    
+
     const formattedResponse = formatOutput(rawResponse, outputType);
 
     // Create response object
@@ -141,7 +136,7 @@ async function processRequest(requestID: string) {
       requestID,
       queryID,
       response: formattedResponse,
-      rawResponse,
+      rawData: completion,
       outputType,
       timestamp: new Date().toISOString(),
       worker: wallet.address
@@ -162,7 +157,7 @@ async function processRequest(requestID: string) {
     // Submit response to contract
     const tx = await oracleContract.submitResponse(requestID, cid);
     await tx.wait();
-    
+
     console.log(`Successfully processed request ${requestID} with CID ${cid}`);
   } catch (error) {
     console.error(`Error processing request ${requestID}:`, error);
@@ -172,13 +167,13 @@ async function processRequest(requestID: string) {
 // Main function to start the worker
 async function startWorker() {
   console.log('Starting Orakai worker...');
-  
+
   // Initialize storage client
   storageClient = await initializeStorageClient();
-  
+
   // Listen for QueryRequested events
-  oracleContract.on("QueryRequested", async (queryID: string, requestID: string, sender: string) => {
-    console.log(`New query requested: ${queryID} with requestID: ${requestID} from ${sender}`);
+  oracleContract.on("RequestCreated", async (reqHash: string, requester: string, queryID: string, requestID: string) => {
+    console.log(`New query requested: ${queryID} with requestID: ${requestID} from ${requester}`);
     await processRequest(requestID);
   });
 

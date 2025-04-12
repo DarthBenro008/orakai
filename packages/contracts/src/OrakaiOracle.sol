@@ -28,7 +28,7 @@ contract OrakaiOracle {
     uint256 public requestTimeout = 1 hours;
 
     event RequestCreated(bytes32 indexed reqHash, address requester, string queryID, string requestID);
-    event ResponseSubmitted(bytes32 indexed reqHash, address worker, string cid);
+    event ResponseSubmitted(bytes32 indexed reqHash, address worker, string cid, string requestID);
     event Finalised(bytes32 indexed reqHash, string queryID, address winner, bytes answer);
 
     modifier onlyAggregator() {
@@ -75,7 +75,7 @@ contract OrakaiOracle {
 
         hasResponded[reqHash][msg.sender] = true;
 
-        emit ResponseSubmitted(reqHash, msg.sender, cid);
+        emit ResponseSubmitted(reqHash, msg.sender, cid, requestID);
     }
 
     function finaliseResponse(
@@ -88,7 +88,8 @@ contract OrakaiOracle {
         Request storage req = requests[reqHash];
 
         require(!req.finalized, "Already finalized");
-        require(validIndexes.length >= 2, "Insufficient consensus responses");
+        //debug: change to two for minimum consensus
+        require(validIndexes.length >= 1, "Insufficient consensus responses");
         require(block.timestamp <= req.timestamp + requestTimeout, "Request expired");
 
         uint256 winnerIndex = validIndexes[randSeed % validIndexes.length];

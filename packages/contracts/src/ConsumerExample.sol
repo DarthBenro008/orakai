@@ -2,35 +2,38 @@
 pragma solidity ^0.8.19;
 
 import "./IOrakaiOracle.sol";
-
-interface IOrakaiCallback {
-    function OrakaiCallback(string calldata requestID, bytes calldata result) external;
-}
+import "./OrakaiOracle.sol";
 
 contract ConsumerExample is IOrakaiCallback {
     address public oracle;
     string public latestRequestID;
-    uint256 public latestResponse;
+    string public latestTranslation;
+    string public initialPhrase;
 
-    event CallbackReceived(string requestID, uint256 response);
+    event CallbackReceived(string requestID, string translation);
 
     constructor(address _oracle) {
         oracle = _oracle;
+        initialPhrase = "hi";
     }
 
-    function makeQuery() external {
-        latestRequestID = string(abi.encodePacked("req-", block.timestamp));
-        IOrakai(oracle).requestQuery("146", latestRequestID, address(this));
+    function makeQuery(string calldata queryID, string calldata requestID) external {
+        latestRequestID = requestID;
+        IOrakai(oracle).requestQuery(queryID, requestID, address(this));
     }
 
     function OrakaiCallback(string calldata requestID, bytes calldata result) external override {
         require(msg.sender == oracle, "Unauthorized oracle");
-        uint256 decoded = abi.decode(result, (uint256));
-        latestResponse = decoded;
+        string memory decoded = abi.decode(result, (string));
+        latestTranslation = decoded;
         emit CallbackReceived(requestID, decoded);
     }
 
-    function getLatestResponse() external view returns (uint256) {
-        return latestResponse;
+    function getLatestTranslation() external view returns (string memory) {
+        return latestTranslation;
+    }
+
+    function getInitialPhrase() external view returns (string memory) {
+        return initialPhrase;
     }
 }

@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { AddressLike, BytesLike, ethers } from 'ethers';
 import { create } from 'ipfs-http-client';
 import fetch from 'cross-fetch';
 
@@ -17,15 +17,7 @@ const wallet = new ethers.Wallet(PRIVATE_KEY!, provider);
 const ipfs = create({ url: IPFS_GATEWAY });
 
 // Load contract ABI
-const oracleABI = [
-  "function requestQuery(string queryID, string requestID, address callbackAddress) external",
-  "function submitResponse(string requestID, string cid) external",
-  "function finaliseResponse(string requestID, uint256[] validIndexes, uint256 randSeed, bytes calldata) external",
-  "function getRequest(string requestID) external view returns (address, string, string, address, uint256, bool)",
-  "function getResponses(string requestID) external view returns (address[] workers, string[] cids)",
-  "event QueryRequested(string indexed queryID, string indexed requestID, address indexed sender)",
-  "event ResponseSubmitted(string indexed requestID, address indexed worker, string indexed cid)"
-];
+const oracleABI = [{ "type": "constructor", "inputs": [{ "name": "_aggregator", "type": "address", "internalType": "address" }], "stateMutability": "nonpayable" }, { "type": "function", "name": "aggregator", "inputs": [], "outputs": [{ "name": "", "type": "address", "internalType": "address" }], "stateMutability": "view" }, { "type": "function", "name": "finaliseResponse", "inputs": [{ "name": "requestID", "type": "string", "internalType": "string" }, { "name": "validIndexes", "type": "uint256[]", "internalType": "uint256[]" }, { "name": "randSeed", "type": "uint256", "internalType": "uint256" }, { "name": "finalAnswer", "type": "bytes", "internalType": "bytes" }], "outputs": [], "stateMutability": "nonpayable" }, { "type": "function", "name": "getRequest", "inputs": [{ "name": "requestID", "type": "string", "internalType": "string" }], "outputs": [{ "name": "", "type": "tuple", "internalType": "struct OrakaiOracle.Request", "components": [{ "name": "requester", "type": "address", "internalType": "address" }, { "name": "queryID", "type": "string", "internalType": "string" }, { "name": "requestID", "type": "string", "internalType": "string" }, { "name": "callbackAddress", "type": "address", "internalType": "address" }, { "name": "timestamp", "type": "uint256", "internalType": "uint256" }, { "name": "finalized", "type": "bool", "internalType": "bool" }] }], "stateMutability": "view" }, { "type": "function", "name": "getResponses", "inputs": [{ "name": "requestID", "type": "string", "internalType": "string" }], "outputs": [{ "name": "", "type": "tuple[]", "internalType": "struct OrakaiOracle.Response[]", "components": [{ "name": "worker", "type": "address", "internalType": "address" }, { "name": "cid", "type": "string", "internalType": "string" }] }], "stateMutability": "view" }, { "type": "function", "name": "hasResponded", "inputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }, { "name": "", "type": "address", "internalType": "address" }], "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }], "stateMutability": "view" }, { "type": "function", "name": "requestQuery", "inputs": [{ "name": "queryID", "type": "string", "internalType": "string" }, { "name": "requestID", "type": "string", "internalType": "string" }, { "name": "callbackAddress", "type": "address", "internalType": "address" }], "outputs": [], "stateMutability": "nonpayable" }, { "type": "function", "name": "requestTimeout", "inputs": [], "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }], "stateMutability": "view" }, { "type": "function", "name": "requests", "inputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }], "outputs": [{ "name": "requester", "type": "address", "internalType": "address" }, { "name": "queryID", "type": "string", "internalType": "string" }, { "name": "requestID", "type": "string", "internalType": "string" }, { "name": "callbackAddress", "type": "address", "internalType": "address" }, { "name": "timestamp", "type": "uint256", "internalType": "uint256" }, { "name": "finalized", "type": "bool", "internalType": "bool" }], "stateMutability": "view" }, { "type": "function", "name": "responses", "inputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }, { "name": "", "type": "uint256", "internalType": "uint256" }], "outputs": [{ "name": "worker", "type": "address", "internalType": "address" }, { "name": "cid", "type": "string", "internalType": "string" }], "stateMutability": "view" }, { "type": "function", "name": "submitResponse", "inputs": [{ "name": "requestID", "type": "string", "internalType": "string" }, { "name": "cid", "type": "string", "internalType": "string" }], "outputs": [], "stateMutability": "nonpayable" }, { "type": "function", "name": "updateAggregator", "inputs": [{ "name": "newAggregator", "type": "address", "internalType": "address" }], "outputs": [], "stateMutability": "nonpayable" }, { "type": "event", "name": "Finalised", "inputs": [{ "name": "reqHash", "type": "bytes32", "indexed": true, "internalType": "bytes32" }, { "name": "queryID", "type": "string", "indexed": false, "internalType": "string" }, { "name": "winner", "type": "address", "indexed": false, "internalType": "address" }, { "name": "answer", "type": "bytes", "indexed": false, "internalType": "bytes" }], "anonymous": false }, { "type": "event", "name": "RequestCreated", "inputs": [{ "name": "reqHash", "type": "bytes32", "indexed": true, "internalType": "bytes32" }, { "name": "requester", "type": "address", "indexed": false, "internalType": "address" }, { "name": "queryID", "type": "string", "indexed": false, "internalType": "string" }, { "name": "requestID", "type": "string", "indexed": false, "internalType": "string" }], "anonymous": false }, { "type": "event", "name": "ResponseSubmitted", "inputs": [{ "name": "reqHash", "type": "bytes32", "indexed": true, "internalType": "bytes32" }, { "name": "worker", "type": "address", "indexed": false, "internalType": "address" }, { "name": "cid", "type": "string", "indexed": false, "internalType": "string" }, { "name": "requestID", "type": "string", "indexed": false, "internalType": "string" }], "anonymous": false }]
 
 // Create contract instance
 const oracleContract = new ethers.Contract(ORACLE_CONTRACT_ADDRESS!, oracleABI, wallet);
@@ -91,7 +83,7 @@ async function fetchQueryDetails(queryID: string) {
 // Function to fetch response from IPFS
 async function fetchResponseFromIPFS(cid: string) {
   try {
-    const response = await fetch(`${IPFS_GATEWAY}${cid}`);
+    const response = await fetch(`https://${cid}.ipfs.w3s.link`);
     if (!response.ok) {
       throw new Error(`Failed to fetch from IPFS: ${response.statusText}`);
     }
@@ -104,15 +96,22 @@ async function fetchResponseFromIPFS(cid: string) {
 
 // Function to process responses for a request
 async function processResponses(requestID: string) {
+  console.log(`Processing responses for request ${requestID}`);
   const state = requestStates.get(requestID);
-  if (!state || state.responseCount < 2) {
+  if (!state) {
+    console.log(`No state found for request ${requestID}`);
     return;
   }
+  // if (!state || state.responseCount < 2) {
+  //   return;
+  // }
 
   try {
+    console.log(`State found for request ${requestID}`);
     // Get query details
     const queryDetails = await fetchQueryDetails(state.queryID);
     const { outputType } = queryDetails;
+    console.log(`Query details found for request ${requestID}`);
 
     // Fetch and validate all responses
     const validResponses: { cid: string; response: any }[] = [];
@@ -122,7 +121,7 @@ async function processResponses(requestID: string) {
         validResponses.push({ cid, response });
       }
     }
-
+    console.log(`Valid responses found for request ${requestID}`);
     if (validResponses.length === 0) {
       console.log(`No valid responses found for request ${requestID}`);
       return;
@@ -134,7 +133,7 @@ async function processResponses(requestID: string) {
 
     // Encode the response
     const calldata = encodeResponse(selectedResponse.response.response, outputType);
-
+    console.log(`Calldata found for request ${requestID}`);
     // Get the indexes of valid responses
     const validIndexes = validResponses.map((_, index) => index);
 
@@ -160,12 +159,12 @@ async function processResponses(requestID: string) {
 async function startAggregator() {
   console.log('Starting Orakai aggregator...');
 
-  // Listen for QueryRequested events
-  oracleContract.on("QueryRequested", async (queryID: string, requestID: string, sender: string) => {
-    console.log(`New query requested: ${queryID} with requestID: ${requestID} from ${sender}`);
-    
+  // Listen for RequestCreated events
+  oracleContract.on("RequestCreated", async (reqHash: BytesLike, requester: AddressLike, queryID: string, requestID: string) => {
+    console.log(`New query requested: ${queryID} with requestID: ${requestID} from ${requester}`);
+
     // Initialize request state
-    const [requester, _, __, callbackAddress] = await oracleContract.getRequest(requestID);
+    const [_, __, ___, callbackAddress] = await oracleContract.getRequest(requestID);
     requestStates.set(requestID, {
       queryID,
       callbackAddress,
@@ -176,20 +175,22 @@ async function startAggregator() {
   });
 
   // Listen for ResponseSubmitted events
-  oracleContract.on("ResponseSubmitted", async (requestID: string, worker: string, cid: string) => {
+  oracleContract.on("ResponseSubmitted", async (reqHash: BytesLike, worker: string, cid: string, requestID: string) => {
     console.log(`New response submitted for request ${requestID} from ${worker} with CID ${cid}`);
-    
+
     const state = requestStates.get(requestID);
     if (state) {
-      state.responseCount++;
+      state.responseCount = state.responseCount + 1;
       state.cids.push(cid);
       state.workers.push(worker);
-      
+
+      await processResponses(requestID);
+
       // Process responses if we have enough
       // debug temporarily one one worker
-      if (state.responseCount === 1) {
-        await processResponses(requestID);
-      }
+      // if (state.responseCount == 1) {
+      //   await processResponses(requestID);
+      // }
     }
   });
 

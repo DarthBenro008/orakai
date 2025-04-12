@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
 import "../src/OrakaiOracle.sol";
-import "../src/OrakaiConsumer.sol";
+import "../src/ConsumerExample.sol";
 
 contract DeployScript is Script {
     function run() external {
@@ -17,8 +17,8 @@ contract DeployScript is Script {
         console.log("OrakaiOracle deployed at:", address(oracle));
 
         // Deploy the consumer contract
-        OrakaiConsumer consumer = new OrakaiConsumer(address(oracle));
-        console.log("OrakaiConsumer deployed at:", address(consumer));
+        ConsumerExample consumer = new ConsumerExample(address(oracle));
+        console.log("ConsumerExample deployed at:", address(consumer));
 
         vm.stopBroadcast();
     }
