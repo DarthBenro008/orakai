@@ -1,158 +1,114 @@
-# Orakai: Decentralized AI Oracle Platform
+# Orakai: The decentralised AI-Oracle for web3, Ask. Verify. Trust.
 
-## Overview
-Orakai is a decentralized AI-powered oracle network that enables smart contracts to access AI-generated insights through a trustless, on-chain interface. It leverages components like OpenRouter.ai (for LLM querying), Storacha (for decentralized data storage), and Randamu (for verifiable randomness) to build a complete AI oracle pipeline.
+## What is Orakai?
+Orakai is a revolutionary decentralized AI oracle network that bridges the gap between smart contracts and artificial intelligence. By combining cutting-edge technologies like OpenRouter.ai for LLM processing, Storacha for decentralized storage, Randamu for verifiable randomness, and the Checker Subnet for governance, Orakai creates a trustless, secure, and efficient pipeline for AI-powered data streams in Web3 applications.
 
-Orakai is designed for composability with EVM-compatible smart contracts and uses the Checker Subnet to maintain node reputation, governance, and sybil resistance.
+## Features
+- **First-Class Decentralized AI Oracle**: Orakai sets a new standard for AI oracles with its robust, trustless architecture
+- **Modular Architecture**: 
+  - Plug-and-play components that can be customized and extended
+  - Independent worker, aggregator, and checker networks
+  - Flexible integration points for custom AI models and storage solutions
+  - Easy to upgrade and maintain individual components without affecting the entire system
+- **Cross-Chain Compatibility**:
+  - EVM-based smart contracts deployable across multiple chains
+  - Standardized interfaces for seamless integration
+  - Chain-agnostic worker network
+  - Unified API for cross-chain query management
+- **Agentic Economy**:
+  - Multi-model interaction framework
+  - AI agents can collaborate and compete in the network
+  - Dynamic model selection based on task requirements
+  - Incentivized participation for different AI models
+  - Reputation system for model performance tracking
+- **Secure & Verifiable**: Leverages Randamu for random function verification and Checker Subnet for governance
+- **Community-Driven**: Anyone can create and deploy their own AI-powered data streams
+- **Composable & Flexible**: Seamlessly integrates with EVM-compatible smart contracts
+- **Reputation-Based**: Sophisticated worker reputation system ensures quality and reliability
+- **Cost-Efficient**: Optimized gas usage and flexible worker participation models
 
----
+## Use Cases
+- **Prediction Markets**: AI-powered market analysis and forecasting
+- **DeFi**: Automated risk assessment and market sentiment analysis
+- **Gaming**: Dynamic content generation and fair randomness
+- **Governance**: AI-assisted proposal analysis and voting recommendations
+- **NFTs**: Intelligent metadata generation and verification
+- **Autonomous Agents**: AI-driven decision making for smart contracts
 
-## Key Components
+## Architecture
 
-### 1. Orakai Smart Contract
-The on-chain entry point for interacting with the Orakai network.
+### Core Components
 
-**Functions:**
-- `requestQuery(queryId)`: Called by consumer contracts to initiate a query request. Emits `QueryRequested` event.
-- `submitResponse(requestId, CID, signature)`: Called by worker bots to submit their response.
-- `finalize(requestId, finalResult, proof)`: Called by aggregator after quorum. Calls consumer contract with result.
+1. **Smart Contract Layer**
+   - EVM-compatible contracts for query requests and responses
+   - Randamu integration for verifiable randomness
+   - Secure callback mechanisms for consumer contracts
 
-**Events:**
-- `QueryRequested(queryId, requestId, sender)`
-- `ResponseSubmitted(requestId, worker, CID)`
-- `ResultFinalized(requestId, finalResult)`
+2. **Backend Services**
+   - User management and project creation
+   - Query metadata storage and retrieval
+   - Worker registration and management
 
-### 2. Orakai Backend
-The centralized backend used for orchestration, developer access, and metadata management.
+3. **Aggregator Network**
+   - Response validation and quorum establishment
+   - Worker reputation management
+   - Result finalization and submission
 
-**Responsibilities:**
-- User signup and project creation
-- Query creation: `queryId` is generated with prompt, output type, and metadata
-- Stores query data and makes it available to workers
-- Worker registration
+4. **Worker Network**
+   - OpenRouter.ai integration for LLM processing
+   - Storacha for decentralized data storage
+   - Signature verification and response submission
 
-**Endpoints:**
-- `POST /create-query`
-- `GET /fetch-query/:queryId`
-- `POST /register-worker`
+5. **Checker Subnet**
+   - Decentralized governance
+   - Worker verification and reputation scoring
+   - Penalty enforcement and rewards distribution
 
-### 3. Orakai Aggregator
-An off-chain trusted node responsible for:
-- Listening to `submitResponse` events
-- Pulling data from Storacha using submitted CID
-- Validating worker signatures
-- Establishing consensus/quorum from worker responses
-- Submitting the finalized result to the smart contract
-- Maintaining reputation scores for workers
+### Technology Stack
+- **OpenRouter.ai**: Gateway for LLM processing and AI inference
+- **Storacha**: Decentralized storage solution for response data
+- **Randamu**: On-chain randomness for quorum selection and load balancing
+- **Checker Network**: Decentralized governance and reputation system
 
-**Optional Future Upgrade:** Aggregator quorum (multi-aggregator network)
+## Potential Growth
+- **Multi-Aggregator Network**: Enhanced decentralization through aggregator DAO
+- **zkML Integration**: Zero-knowledge proofs for LLM inference verification
+- **Token Economy**: Native token for staking, slashing, and payments
+- **Query NFTs**: Decentralized query registry through NFT ownership
+- **Cross-Chain Expansion**: Support for multiple blockchain networks
+- **Advanced AI Models**: Integration with cutting-edge AI technologies
 
-### 4. Orakai Worker (Bot)
-A downloadable CLI binary that anyone can run to earn rewards.
+## Getting Started
 
-**Workflow:**
-- Listens for new `requestId`s
-- Fetches `queryId` metadata from backend
-- Sends prompt to LLM provider (OpenRouter.ai)
-- Casts response to expected output type
-- Signs result and uploads to Storacha → gets CID
-- Submits CID + signature to smart contract
+1. Clone the repository:
+```bash
+git clone https://github.com/your-org/orakai.git
+cd orakai
+```
 
-**Configurable Options:**
-- OpenRouter Key
-- LLM model (e.g., GPT-4, Claude, Mixtral)
-- Worker private key
+2. Install dependencies:
+```bash
+bun install
+```
 
-### 5. Orakai Subnet (Checker Network)
-Provides decentralized governance, reputation scoring, and validator consensus:
-- Workers are verified via Checker Subnet
-- Can slash bad actors, boost high-performing workers
-- Provides periodic signed attestations to the aggregator
-- Helps weight votes in quorum logic
+3. Configure environment variables:
+```bash
+cp .env.example .env
+# Fill in your environment variables
+```
 
----
+4. Start development server:
+```bash
+bun dev
+```
 
-## Query Lifecycle
+## Support
+We welcome contributions from the community! Here's how you can help:
 
-1. **Query Creation**
-   - User registers a new query via the Orakai backend
-   - A `queryId` is returned, which stores prompt, outputType, etc.
+- ⭐ Star the repository if you find it useful
+- 🐛 Report bugs by opening issues
+- 💡 Suggest new features
+- 🔧 Submit pull requests
+- 📣 Spread the word about Orakai
 
-2. **Request Initiation**
-   - Consumer smart contract calls `requestQuery(queryId)`
-   - Smart contract emits a new `requestId` (unique per call)
-
-3. **Worker Response**
-   - Workers listen for new `requestId`s
-   - Fetch query details from backend
-   - Execute prompt with OpenRouter.ai
-   - Cast response to expected type, sign, upload to Storacha
-   - Call `submitResponse(requestId, CID, sig)` on Orakai contract
-
-4. **Quorum + Finalization**
-   - Aggregator listens to `submitResponse`
-   - Aggregator pulls data from Storacha, validates signatures
-   - Checks for quorum (e.g., 3 of 5 matching answers)
-   - Uses Randamu to pick canonical response among matches
-   - Calls `finalize(requestId, result)`
-
-5. **Callback**
-   - Orakai contract calls back the consumer with the final answer
-
----
-
-## Consensus & Randamu
-- Randamu is used to inject verifiable randomness into quorum selection
-- Use-case: Picking one canonical response out of multiple identical ones for reward attribution
-- Randamu also helps load-balancing workers, pseudo-random audits
-
----
-
-## Reputation System
-- Aggregator maintains local scores for each worker
-- Based on:
-  - Match frequency
-  - Response time
-  - Accuracy (as judged by subnet or aggregator)
-- Checker Subnet cross-verifies and enforces penalties/boosts
-
----
-
-## Considerations
-- Each `requestQuery` generates a new `requestId`
-- Multiple contracts can use the same `queryId`
-- Smart contracts only need to handle callbacks and expected type parsing
-- Output types are strictly typed to avoid hallucination errors
-
----
-
-## Worker Participation
-- Worker binary can be open-sourced
-- Runs on any machine with an API key and wallet
-- Gas fees can be reimbursed or workers can submit only off-chain
-- Can run as a service or scheduled cron jobs
-
----
-
-## Future Improvements
-- Multiple aggregators (aggregator DAO)
-- Fully decentralized query registry (queryId as NFT?)
-- zkProofs for LLM inference using zkML
-- Token incentive layer for staking, slashing, and payments
-
----
-
-## Dependencies
-- [OpenRouter.ai](https://openrouter.ai) — LLM Gateway
-- [Storacha](https://github.com/filecoin/storacha) — Decentralized data store (returns CID)
-- [Randamu](https://github.com/cryptonetlab/randamu) — On-chain randomness
-- [Checker Network](https://checker.network) — Decentralized reputation/subnet
-
----
-
-## Summary
-Orakai provides a complete decentralized AI Oracle protocol — from prompt creation to on-chain finalization — using verifiable data, quorum consensus, decentralized workers, and off-chain execution. The design is modular, extensible, and community-first.
-
-The system encourages openness, verifiability, and transparency — making it ideal for use cases in prediction markets, governance tooling, autonomous agents, and dApp AI tooling.
-
----
+Join our community and help shape the future of decentralized AI oracles!
