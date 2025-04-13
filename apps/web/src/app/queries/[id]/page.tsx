@@ -3,8 +3,9 @@ import { DashboardShell } from "@/components/dashboard-shell"
 import { QueryDetail } from "./query-detail"
 import { SessionProvider } from "next-auth/react"
 
-export default function QueryDetailPage({ params }: { params: { id: string } }) {
-  const queryId = Number.parseInt(params.id)
+export default async function QueryDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const queryId = Number.parseInt(id)
   
   if (isNaN(queryId)) {
     notFound()

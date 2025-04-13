@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard-shell"
@@ -11,10 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
 
-export default function CreateQueryPage() {
+export default function CreateQueryForm() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     queryName: "",
@@ -39,8 +35,8 @@ export default function CreateQueryPage() {
     setIsSubmitting(true)
     await fetch("/api/queries", {
       method: "POST",
-        body: JSON.stringify(formData),
-      })
+      body: JSON.stringify(formData),
+    })
     // Simulate API call
     setTimeout(async () => {
       setIsSubmitting(false)
@@ -59,10 +55,10 @@ export default function CreateQueryPage() {
     <DashboardShell>
       <div className="flex items-center gap-4 mb-6">
         <Button variant="outline" size="icon" asChild>
-          <Link href="/dashboard">
+          {/* <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
-          </Link>
+          </Link> */}
         </Button>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Create New Query</h1>
@@ -135,7 +131,7 @@ export default function CreateQueryPage() {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline" asChild>
-              <Link href="/dashboard">Cancel</Link>
+              {/* <Link href="/dashboard">Cancel</Link> */}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Creating..." : "Create Query"}
@@ -145,4 +141,4 @@ export default function CreateQueryPage() {
       </Card>
     </DashboardShell>
   )
-}
+} 

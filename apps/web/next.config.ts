@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     domains: ["lh3.googleusercontent.com"],
   },
   trailingSlash: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";

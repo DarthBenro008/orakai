@@ -49,7 +49,7 @@ export default function DashboardPage() {
                     <p className="text-muted-foreground">View and manage all available queries</p>
                 </div>
                 <Button asChild>
-                    <Link href="/queries/create">
+                    <Link href="/dashboard/create">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Create Query
                     </Link>

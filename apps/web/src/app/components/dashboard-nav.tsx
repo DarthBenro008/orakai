@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Database, User } from "lucide-react"
+import { Database, ScrollTextIcon, User } from "lucide-react"
 import { cn } from "@/lib/utils"
-
+import { SiGithub } from "@icons-pack/react-simple-icons"
 export function DashboardNav() {
   const pathname = usePathname()
 
@@ -15,9 +15,14 @@ export function DashboardNav() {
       icon: Database,
     },
     {
-      href: "/my-queries",
-      label: "My Queries",
-      icon: User,
+      href: "https://github.com/darthbenro008/orakai",
+      label: "Go to Github",
+      icon: SiGithub,
+    },
+    {
+      href: "https://staging-assets.kofferx.com/orakai_whitepaper.pdf",
+      label: "Read the Whitepaper",
+      icon: ScrollTextIcon,
     },
   ]
 
