@@ -12,7 +12,7 @@ export async function GET(
     const { id } = await params
     const db = getCloudflareContext().env.DB as D1Database;
     // also get the user data of who created the query from the foreign key
-    const query = await db.prepare("SELECT * FROM queries WHERE id = ?")
+    const query = await db.prepare("SELECT id as queryId, * FROM queries WHERE id = ?")
         .bind(id)
         .first();
     const user = await db.prepare("SELECT * FROM users WHERE id = ?")   

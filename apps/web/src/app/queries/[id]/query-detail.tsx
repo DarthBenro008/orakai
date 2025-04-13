@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Calendar, Edit, Trash2, User } from "lucide-react"
+import { ArrowLeft, Calendar, Edit, IdCard, Trash2, User } from "lucide-react"
 import Link from "next/link"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
@@ -154,6 +154,13 @@ export function QueryDetail({ queryId }: QueryDetailProps) {
                         <CardDescription>Information about this query</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-sm">
+                                <IdCard className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-muted-foreground">Query ID:</span>
+                                <span>{query.queryId}</span>
+                            </div>
+                        </div>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm">
                                 <User className="h-4 w-4 text-muted-foreground" />
