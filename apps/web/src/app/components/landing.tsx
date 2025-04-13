@@ -25,6 +25,7 @@ import {
     Workflow,
 } from "lucide-react"
 import { useRouter } from "next/navigation";
+import Link from "next/link"
 
 export default function OrakaiLanding() {
     const router = useRouter();
@@ -51,9 +52,11 @@ export default function OrakaiLanding() {
                             <Button onClick={() => router.push("/login")} size="lg">
                                 Create your AI powered data stream <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
-                            <Button size="lg" variant="outline">
-                                Read the Docs <ExternalLink className="ml-2 h-4 w-4" />
-                            </Button>
+                            <Link href={"https://staging-assets.kofferx.com/orakai_whitepaper.pdf"} target="_blank">
+                                <Button size="lg" variant="outline">
+                                    Read the Docs <ExternalLink className="ml-2 h-4 w-4" />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>

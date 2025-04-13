@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SiGithub } from "@icons-pack/react-simple-icons"
+import Link from "next/link"
 
 export function NavMenu() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -22,9 +23,9 @@ export function NavMenu() {
           <a href="/login" className="text-sm font-medium transition-colors hover:text-primary">
             Login
           </a>
-          <a href="/whitepaper" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href={"https://staging-assets.kofferx.com/orakai_whitepaper.pdf"} target="_blank" className="text-sm font-medium transition-colors hover:text-primary">
             Read the Whitepaper
-          </a>
+          </Link>
           <a 
             href="https://github.com/darthbenro008/orakai" 
             target="_blank" 
@@ -56,13 +57,14 @@ export function NavMenu() {
                 >
                   Login
                 </a>
-                <a 
-                  href="/whitepaper" 
+                <Link 
+                  href={"https://staging-assets.kofferx.com/orakai_whitepaper.pdf"} 
+                  target="_blank"
                   className="text-sm font-medium transition-colors hover:text-primary"
                   onClick={() => setIsOpen(false)}
                 >
                   Read the Whitepaper
-                </a>
+                </Link>
                 <a 
                   href="https://github.com/darthbenro008/orakai" 
                   target="_blank" 

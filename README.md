@@ -3,6 +3,9 @@
 ## What is Orakai?
 Orakai is a revolutionary decentralized AI oracle network that bridges the gap between smart contracts and artificial intelligence. By combining cutting-edge technologies like OpenRouter.ai for LLM processing, Storacha for decentralized storage, Randamu for verifiable randomness, and the Checker Subnet for governance, Orakai creates a trustless, secure, and efficient pipeline for AI-powered data streams in Web3 applications.
 
+
+> Read the whitepaper [here](https://staging-assets.kofferx.com/orakai_whitepaper.pdf)
+
 ## Features
 - **First-Class Decentralized AI Oracle**: Orakai sets a new standard for AI oracles with its robust, trustless architecture
 - **Modular Architecture**: 
@@ -36,6 +39,19 @@ Orakai is a revolutionary decentralized AI oracle network that bridges the gap b
 - **Autonomous Agents**: AI-driven decision making for smart contracts
 
 ## Architecture
+
+![Architecture](packages/assets/architecture.png)
+
+### End to End flow
+
+1. **User creates a query** through the frontend.
+2. The **backend** stores query metadata and emits a job for workers.
+3. The **smart contract** uses **Randamu** to randomly select eligible workers.
+4. Selected **workers** independently run the query against OpenRouter LLMs and submit signed results.
+5. Responses are uploaded to **Storacha/Filecoin** for transparency.
+6. The **aggregator** waits for a quorum and submits the final agreed result.
+7. The **smart contract emits** the response event.
+8. The **consumer smart contract** reads and uses the result.
 
 ### Core Components
 
