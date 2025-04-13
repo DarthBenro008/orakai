@@ -1,4 +1,6 @@
-# Orakai: The decentralised AI-Oracle for web3, Ask. Verify. Trust.
+# Orakai: The decentralised AI-Oracle for web3. Ask. Verify. Trust.
+
+![banner](packages/assets/github.png)
 
 ## What is Orakai?
 Orakai is a revolutionary decentralized AI oracle network that bridges the gap between smart contracts and artificial intelligence. By combining cutting-edge technologies like OpenRouter.ai for LLM processing, Storacha for decentralized storage, Randamu for verifiable randomness, and the Checker Subnet for governance, Orakai creates a trustless, secure, and efficient pipeline for AI-powered data streams in Web3 applications.
