@@ -1,108 +1,61 @@
 "use client"
-import { signOut, useSession } from "next-auth/react"
-import Image from "next/image"
-import ContractInteraction from "../../components/ContractInteraction"
+import { DashboardShell } from "@/components/dashboard-shell"
+import { QueryList } from "@/components/query-list"
+import { Button } from "@/components/ui/button"
+import { PlusCircle } from "lucide-react"
+import Link from "next/link"
+import { fetchQueries } from "@/lib/api"
+import { useQuery } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
 
-export default function Dashboard() {
+export default function DashboardPage() {
     const { data: session } = useSession()
+    const { data: queries, isLoading, error } = useQuery({
+        queryKey: ["queries"],
+        queryFn: fetchQueries,
+    })
 
-    console.log("Session data:", session)
-
-    const createQuery = async () => {
-        console.log("Creating query...")
-        const response = await fetch("/api/queries", {
-            method: "POST",
-            body: JSON.stringify({ 
-                queryName: "Test Query", 
-                queryDescription: "Test Description", 
-                queryPrompt: "Translate the following text to French: 'I am going to cafe!'", 
-                outputType: "string" 
-            }),
-        })
-        const data = await response.json()
-        console.log("Query created:", data)
-    }
-
-    const deleteQuery = async () => {
-        console.log("Deleting query...")
-        const response = await fetch("/api/queries/1", {
-            method: "DELETE",
-        })
-        const data = await response.json()
-        console.log("Query deleted:", data)
-    }
-
-    const getQueries = async () => {
-        console.log("Fetching queries...")
-        const response = await fetch("/api/queries", {
-            method: "GET",
-        })
-        const data = await response.json()
-        console.log("Queries fetched:", data)
-    }
-
-    if (session?.user?.email) {
+    if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-100 p-8">
-                <div className="max-w-4xl mx-auto space-y-8">
-                    {/* User Profile Section */}
-                    <div className="bg-white rounded-lg shadow p-6 flex items-center space-x-4">
-                        <Image 
-                            src={session.user.image ?? ""} 
-                            width={64} 
-                            height={64} 
-                            alt={session.user.name ?? "User profile picture"} 
-                            className="rounded-full"
-                        />
-                        <div>
-                            <h1 className="text-2xl font-bold">Welcome {session.user.name}!</h1>
-                            <p className="text-gray-600">{session.user.email}</p>
-                        </div>
-                        <button 
-                            onClick={() => signOut()}
-                            className="ml-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                        >
-                            Sign out
-                        </button>
+            <DashboardShell>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight">Queries</h1>
+                        <p className="text-muted-foreground">Loading queries...</p>
                     </div>
-
-                    {/* API Interaction Section */}
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <h2 className="text-xl font-bold mb-4">API Interactions</h2>
-                        <div className="grid grid-cols-3 gap-4">
-                            <button 
-                                onClick={createQuery}
-                                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                            >
-                                Create Query
-                            </button>
-                            <button 
-                                onClick={deleteQuery}
-                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                            >
-                                Delete Query
-                            </button>
-                            <button 
-                                onClick={getQueries}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                            >
-                                Get Queries
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Contract Interaction Section */}
-                    <ContractInteraction />
                 </div>
-            </div>
+            </DashboardShell>
+        )
+    }
+
+    if (error) {
+        return (
+            <DashboardShell>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight">Queries</h1>
+                        <p className="text-red-500">Error loading queries</p>
+                    </div>
+                </div>
+            </DashboardShell>
         )
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-            <div className="bg-white p-8 rounded-lg shadow">
-                <p className="text-xl text-red-600">You are not authorized to view this page!</p>
+        <DashboardShell>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight">Queries</h1>
+                    <p className="text-muted-foreground">View and manage all available queries</p>
+                </div>
+                <Button asChild>
+                    <Link href="/queries/create">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Create Query
+                    </Link>
+                </Button>
             </div>
-        </div>
+            <QueryList queries={queries || []} currentUserId={session?.user?.id || ""} />
+        </DashboardShell>
     )
 }

@@ -11,25 +11,42 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "migrate:local": "wrangler d1 execute orakai-db --local --file ../../packages/db/schema.sql",
-		"migrate:remote": "wrangler d1 execute orakai-db --remote --file ../../packages/db/schema.sql"
+    "migrate:remote": "wrangler d1 execute orakai-db --remote --file ../../packages/db/schema.sql"
   },
   "dependencies": {
     "@auth/d1-adapter": "^1.8.0",
+    "@icons-pack/react-simple-icons": "^12.6.0",
     "@opennextjs/cloudflare": "^1.0.0-beta.2",
+    "@radix-ui/react-alert-dialog": "^1.1.7",
+    "@radix-ui/react-avatar": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.7",
+    "@radix-ui/react-label": "^2.1.3",
+    "@radix-ui/react-popover": "^1.1.7",
+    "@radix-ui/react-select": "^2.1.7",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@radix-ui/react-tabs": "^1.1.4",
+    "@tanstack/react-query": "^5.73.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.487.0",
     "next": "15.3.0",
     "next-auth": "^5.0.0-beta.25",
+    "next-themes": "^0.4.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.2.0",
+    "tw-animate-css": "^1.2.5"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

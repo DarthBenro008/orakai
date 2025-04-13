@@ -35,8 +35,8 @@ export const POST = auth(async function POST(req: any) {
 // list all queries
 export async function GET(req: any) {
     const db = getCloudflareContext().env.DB as D1Database;
-    const queries = await db.prepare("SELECT * FROM queries")
+    const queries = await db.prepare("SELECT q.id AS queryId, q.queryName, q.queryDescription, q.queryPrompt, q.outputType, q.createdAt, u.id AS userId, u.name AS userName, u.email AS userEmail FROM queries q JOIN users u ON q.userId = u.id")
         .bind()
         .all();
-    return NextResponse.json({ message: "Queries fetched", queries }, { status: 200 })
+    return NextResponse.json({ message: "Queries fetched", queries: queries.results }, { status: 200 })
 }

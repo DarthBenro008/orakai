@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["lh3.googleusercontent.com"],
   },
+  trailingSlash: false,
 };
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
