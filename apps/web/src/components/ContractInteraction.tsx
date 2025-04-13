@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 
 // Configuration - replace these with your values
-const CONTRACT_ADDRESS = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707" // Replace with your deployed contract address
+const CONTRACT_ADDRESS = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853" // Replace with your deployed contract address
 const RPC_URL = "http://localhost:8545" // Anvil default RPC URL
 const PRIVATE_KEY = process.env.NEXT_PUBLIC_PRIVATE_KEY // Replace with your private key
 
